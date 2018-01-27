@@ -64,10 +64,12 @@ Replace all _WANIF_ and _LANIF_ with your interfaces' names.
 
 ## Enabling services 
 
+Use your choice of wan / lan profiles' names!
+
 ```
 systemctl enable netctl
-netctl enable pppoe
-netctl enable lanprof
+netctl enable wan_XXXX
+netctl enable lan_XXXX
 
 systemctl enable dnsmasq
 
@@ -81,9 +83,11 @@ Either simply reboot
 
 or 
 
+Use your choice of wan / lan profiles' names!
+
 ```
-netctl start lanprof
-netctl start pppoe
+netctl start lan_XXXX
+netctl start wan_XXXX
 
 systemctl start dnsmasq
 
