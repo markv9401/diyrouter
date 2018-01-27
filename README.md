@@ -28,7 +28,7 @@ Choose a sample config from the netctl configs that best describes your WAN setu
 * DHCP ~ wan_dhcp
 
 and edit your WAN interface and access data.
-**IMPORTANT:**  if you choose _PPPoE_ then your _WAN INTERFACE_will be _ppp0_ from now on excluding the _wan_pppoe_ config file.
+**IMPORTANT:**  if you choose _PPPoE_ then your _WAN INTERFACE_ will be _ppp0_ from now on excluding the _wan_pppoe_ config file.
 
 
 Choose one for the LAN setup too:
