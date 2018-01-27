@@ -1,57 +1,41 @@
-*nat
-:PREROUTING ACCEPT [0:0]
-:INPUT ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:POSTROUTING ACCEPT [0:0]
+################################################################################
+*mangle
+:PREROUTING ACCEPT [341:238707]
+:INPUT ACCEPT [337:238444]
+:FORWARD ACCEPT [4:263]
+:OUTPUT ACCEPT [348:235698]
+:POSTROUTING ACCEPT [352:235961]
 
-# ppp0 is WAN interface, #enp1s0 is LAN interface
--A POSTROUTING -o ppp0 -j MASQUERADE
-
-# NAT pinhole: HTTP from WAN to LAN
-#-A PREROUTING -p tcp -m tcp -i ppp0 --dport 80 -j DNAT --to-destination 10.0.0.1:80
-
+# clamp mss to pmtu - necessary for pppoe fix
+-A FORWARD -o ppp0 -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 COMMIT
+################################################################################
 
+
+################################################################################
+*nat
+:PREROUTING ACCEPT [42:4541]
+:INPUT ACCEPT [21:1310]
+:OUTPUT ACCEPT [1084:75113]
+:POSTROUTING ACCEPT [104:6978]
+
+# forwarding to self + nat loopback
+-A PREROUTING -p tcp -i WANIF --dport 80 -j DNAT --to 10.0.0.1
+
+# nat / masquerade
+-A POSTROUTING -o WANIF -j MASQUERADE
+COMMIT
+################################################################################
+
+
+################################################################################
 *filter
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [7539:1099311]
 
-# Service rules
-
-# basic global accept rules - ICMP, loopback, traceroute, established all accepted
--A INPUT -s 127.0.0.0/8 -d 127.0.0.0/8 -i lo -j ACCEPT
--A INPUT -p icmp -j ACCEPT
--A INPUT -m state --state ESTABLISHED -j ACCEPT
-
-# enable traceroute rejections to get sent out
--A INPUT -p udp -m udp --dport 33434:33523 -j REJECT --reject-with icmp-port-unreachable
-
-# DNS - accept from LAN
--A INPUT -i enp1s0 -p tcp --dport 53 -j ACCEPT
--A INPUT -i enp1s0 -p udp --dport 53 -j ACCEPT
-
-# SSH - accept from LAN
--A INPUT -i enp1s0 -p tcp --dport 22 -j ACCEPT
-
-# DHCP client requests - accept from LAN
--A INPUT -i enp1s0 -p udp --dport 67:68 -j ACCEPT
-
-# drop all other inbound traffic
--A INPUT -j DROP
-
-# Forwarding rules
-
-# forward packets along established/related connections
+# nat forward + keep connection
 -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-
-# forward from LAN (enp1s0) to WAN (ppp0)
--A FORWARD -i enp1s0 -o ppp0 -j ACCEPT
-
-# allow traffic from our NAT pinhole
-#-A FORWARD -p tcp -d 10.0.0.1 --dport 80 -j ACCEPT
-
-# drop all other forwarded traffic
--A FORWARD -j DROP
-
+-A FORWARD -i LANIF -o WANIF -j ACCEPT
 COMMIT
+################################################################################

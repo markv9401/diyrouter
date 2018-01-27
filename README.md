@@ -1,18 +1,34 @@
-# diyrouter
-Router implementation for home
+# DIY Linux IPV4 + IPV6 router
 
-## What works
-* PPPoE connects fine. On the router itself there is a perfectly fine and 
-working connection as far as I can tell (CLI only, but everything pings,
-curl loads, speedtest-cli runs fine)
-* DHCP serves addresses on the LAN, ssh works to / from the router
-* NAT / Masquerading works. Clients reach the internet (well, some of it)
+There were a bit too many tutorials on DIY Linux routers (ArsTechnica, Arch -, Gentoo -, Ubuntu wiki etc.), yet none on its own helped me create my own implementation. It was the joint forces of all above listed and further random forums, reddit etc.
+So I thought I'd share my own configurations and applications I used.
+
+### Tools in use
+
+Have these installed or get ready to replace them on your own.
+
+* systemd
+* systemctl
+* netctl
+* dnsmasq
+* iptables
+* wide-dhcpv6
 
 
-## What doesn't work
-* Clients don't reach some / most of the internet. Google.com, Reddit.com works.
-Some pages, like a local forum (prohardver.hu) load incredibly slowly and sketchy
-Some pages won't load at all (speedtest.net)
-apt install xyz hangs on "waiting for headers 0%"
+### Personalisation
+
+Just inspect ALL configurations and edit accordingly to your setup. After which you can just enable all:
+
+```
+systemctl enable netctl
+netctl enable pppoe
+netctl enable lanprof
+
+systemctl enable dnsmasq
+
+systemctl enable iptables
+systemctl enable ip6tables
+```
+
 
 

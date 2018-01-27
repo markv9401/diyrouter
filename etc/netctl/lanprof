@@ -1,7 +1,5 @@
-Description='Private Interface'
-Interface=enp1s0
+Description='LAN / DHCP'
+Interface=LANIF
 Connection=ethernet
 IP='static'
 Address=('10.0.0.1/24')
-
-ExecUpPost='/usr/bin/ip link set enp1s0 mtu 1492'

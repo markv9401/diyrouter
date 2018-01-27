@@ -1,0 +1,6 @@
+Description='LAN BRIDGE / DHCP'
+Interface=br0
+Connection=bridge
+BindsToInterfaces=(LANIF1 LANIF2 LANIF3 LANIF4)
+IP=static
+Address=(10.0.0.1/24)

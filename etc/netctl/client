@@ -1,0 +1,12 @@
+Description='WAN / DHCP'
+Interface=LANIF
+Connection=ethernet
+IP=dhcp
+
+
+# DHCPV6
+#IP6=dhcp
+#DHCP6Client=dhclient
+
+# SLAAC
+#IP6=stateless

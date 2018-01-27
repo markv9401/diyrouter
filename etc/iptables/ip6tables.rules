@@ -1,0 +1,12 @@
+################################################################################
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [36:3024]
+:OUTPUT ACCEPT [0:0]
+
+# letting all the ip6 icmp through
+-A INPUT -p ipv6-icmp -j ACCEPT
+-A FORWARD -p ipv6-icmp -j ACCEPT
+-A OUTPUT -p ipv6-icmp -j ACCEPT
+COMMIT
+################################################################################

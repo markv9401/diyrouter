@@ -1,36 +1,15 @@
-Description='Example PPPoE connection'
-Interface=eno1
+Description='WAN / PPPoE'
+Interface=WANIF
 Connection=pppoe
-User='XXXXXXXXX'  # censored on purpose, pppoe does work!
-Password='XXXXXXX'
+User='PPPOE_USER_NAME'
+Password='PPPOE_PASSWORD'
 
 # Always keep a connection established
 ConnectionMode='persist'
-# Establish connection on demand
-#ConnectionMode='demand'
-#IdleTimeout=300
 
-# Use default route provided by the peer (default: true)
-#DefaultRoute=true
-# Use DNS provided by the peer (default: true)
-#UsePeerDNS=true
+# Enable IPv6 support (dualstack too)
+PPPoEIP6=yes
 
-# Override default LCP parameters from /etc/ppp/options
-#LCPEchoInterval=15
-#LCPEchoFailure=10
-
-# PPPoE options - experts only
-#
-# PPPoE service name
-#PPPoEService=''
-# PPPoE access concentrator name
-#PPPoEAC=''
-# Attach to existing session (sessid:macaddr)
-#PPPoESession=''
-# Only connect to specified MAC address
-#PPPoEMAC=''
-# Enable IPv6 support
-#PPPoEIP6=yes
-
-
-#ExecUpPost='/usr/bin/ip link set eno1 mtu 1492'
+# make WIDE-DHCPV6 do the IPV6 delegation
+ExecUpPost='systemctl start dhcp6c@ppp0'
+ExecDownPre='systemctl stop dhcp6c@ppp0'
